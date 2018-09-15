@@ -1,4 +1,4 @@
-const colorArray = ['red','blue','green','yellow','magenta']
+export const colorArray = ['red','blue','green','yellow','magenta']
 
 export const getColor = () => {
   const colorIndex = Math.floor(Math.random() * colorArray.length)

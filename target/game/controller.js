@@ -23,11 +23,16 @@ let GameController = class GameController {
     getGame(id) {
         return entity_1.default.findOne(id);
     }
-    async updateGame(id, update) {
-        const game = await entity_1.default.findOne(id);
-        if (!game)
+    async updateGame(id, newGame) {
+        const oldGame = await entity_1.default.findOne(id);
+        if (!oldGame) {
             throw new routing_controllers_1.NotFoundError('Cannot find this game');
-        return entity_1.default.merge(game, update).save();
+        }
+        else {
+            const x = functions_1.moves(oldGame.board, newGame.board);
+            console.log(x);
+        }
+        return entity_1.default.merge(oldGame, newGame).save();
     }
     createGame(gameName) {
         const game = new entity_1.default();

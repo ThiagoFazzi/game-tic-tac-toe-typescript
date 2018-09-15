@@ -1,8 +1,6 @@
-import { JsonController, Get, Put, Post, Param, HttpCode, Body, NotFoundError, BodyParam } from 'routing-controllers';
+import { JsonController, Get, Put, Post, Param, HttpCode, Body, NotFoundError, BodyParam, HttpError, BadRequestError } from 'routing-controllers';
 import Game from './entity';
-import { getColor, getBoard } from './functions';
-
-
+import { getColor, getBoard, moves, colorArray } from './functions';
 
 @JsonController()
 export default class GameController {
@@ -23,21 +21,26 @@ export default class GameController {
     @Put('/games/:id')
     async updateGame(
       @Param('id') id: number,
-      @Body() update: Partial<Game>
+      @BodyParam('color') newColor: string,
+      @BodyParam('board') newBoard: Object,
+      @Body() newGame: Partial<Game>
     ) {
       
-      const game = await Game.findOne(id)
-      if (!game) throw new NotFoundError('Cannot find this game')
-      
+      const oldGame = await Game.findOne(id)
+      if(!oldGame) throw new NotFoundError('Cannot find this game')
+        
+      if(!moves(oldGame.board,newBoard)) throw new BadRequestError('You cannot make more than one move')
 
+      //This solution is not good because the better solution is use a Validator on the class, but dosent work
+      if(colorArray.includes(newColor)) throw new BadRequestError('You can only change color for : red | blue | green | yellow | magenta')
 
-      return Game.merge(game, update).save()
+      return Game.merge(oldGame, newGame).save()
     }
 
     @Post('/games')
     @HttpCode(201)
     createGame( 
-      @BodyParam('name') gameName: String
+      @BodyParam('name') gameName: string
     ) {
 
       const game = new Game()
