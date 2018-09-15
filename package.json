@@ -1,0 +1,25 @@
+{
+  "name": "api-homework",
+  "version": "1.0.0",
+  "description": "API Game  tic tac toe",
+  "main": "index.js",
+  "repository": "https://github.com/ThiagoFazzi/tic-tac-toe-typescript-api",
+  "author": "Thiago Fazzi",
+  "license": "MIT",
+  "dependencies": {
+    "@types/koa": "^2.0.46",
+    "@types/koa-bodyparser": "^5.0.1",
+    "@types/koa-multer": "^1.0.0",
+    "@types/koa-router": "^7.0.31",
+    "koa": "^2.5.3",
+    "koa-bodyparser": "^4.2.1",
+    "koa-multer": "^1.0.2",
+    "koa-router": "^7.4.0",
+    "nodemon": "^1.18.4",
+    "pg": "^7.4.3",
+    "routing-controllers": "^0.7.7",
+    "typeorm": "^0.2.7",
+    "types": "^0.1.1",
+    "typescript": "^3.0.3"
+  }
+}
