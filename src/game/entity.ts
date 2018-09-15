@@ -2,12 +2,8 @@ import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm'
 import { BaseEntity } from 'typeorm/repository/BaseEntity'
 import { IsString, IsIn} from 'class-validator';
 
-
-
 @Entity()
 export default class Game extends BaseEntity {
-
-  
 
   @PrimaryGeneratedColumn()
   id?: number
@@ -22,5 +18,5 @@ export default class Game extends BaseEntity {
   color: string
 
   @Column('json', { nullable: true })
-  board: {}
+  board: object
 }

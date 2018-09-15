@@ -23,15 +23,14 @@ let GameController = class GameController {
     getGame(id) {
         return entity_1.default.findOne(id);
     }
-    async updateGame(id, newGame) {
+    async updateGame(id, newColor, newGame) {
         const oldGame = await entity_1.default.findOne(id);
-        if (!oldGame) {
+        if (!oldGame)
             throw new routing_controllers_1.NotFoundError('Cannot find this game');
-        }
-        else {
-            const x = functions_1.moves(oldGame.board, newGame.board);
-            console.log(x);
-        }
+        if (functions_1.moves(JSON.stringify(oldGame.board), newGame.board) > 1)
+            throw new routing_controllers_1.BadRequestError('You cannot make more than one move');
+        if (!functions_1.colorArray.includes(newColor))
+            throw new routing_controllers_1.BadRequestError('You can only change color for : red | blue | green | yellow | magenta');
         return entity_1.default.merge(oldGame, newGame).save();
     }
     createGame(gameName) {
@@ -58,9 +57,10 @@ __decorate([
 __decorate([
     routing_controllers_1.Put('/games/:id'),
     __param(0, routing_controllers_1.Param('id')),
-    __param(1, routing_controllers_1.Body()),
+    __param(1, routing_controllers_1.BodyParam('color')),
+    __param(2, routing_controllers_1.Body()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number, Object]),
+    __metadata("design:paramtypes", [Number, String, Object]),
     __metadata("design:returntype", Promise)
 ], GameController.prototype, "updateGame", null);
 __decorate([
