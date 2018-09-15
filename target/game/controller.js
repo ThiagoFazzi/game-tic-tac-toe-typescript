@@ -14,7 +14,7 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const routing_controllers_1 = require("routing-controllers");
 const entity_1 = require("./entity");
-const functions_1 = require("./functions");
+const functions_1 = require("../lib/functions");
 let GameController = class GameController {
     async allGames() {
         const games = await entity_1.default.find();
@@ -23,14 +23,18 @@ let GameController = class GameController {
     getGame(id) {
         return entity_1.default.findOne(id);
     }
-    async updateGame(id, newColor, newGame) {
+    async updateGame(id, game) {
         const oldGame = await entity_1.default.findOne(id);
         if (!oldGame)
             throw new routing_controllers_1.NotFoundError('Cannot find this game');
-        if (functions_1.moves(JSON.stringify(oldGame.board), newGame.board) > 1)
+        const newGame = new entity_1.default();
+        newGame.name = game.name;
+        newGame.color = game.color;
+        newGame.board = game.board;
+        if (functions_1.colorValidate(newGame.color) == 0)
+            throw new routing_controllers_1.BadRequestError('This color does not be part of the pallete');
+        if (functions_1.movesValidate(oldGame.board, newGame.board) > 1)
             throw new routing_controllers_1.BadRequestError('You cannot make more than one move');
-        if (!functions_1.colorArray.includes(newColor))
-            throw new routing_controllers_1.BadRequestError('You can only change color for : red | blue | green | yellow | magenta');
         return entity_1.default.merge(oldGame, newGame).save();
     }
     createGame(gameName) {
@@ -57,10 +61,9 @@ __decorate([
 __decorate([
     routing_controllers_1.Put('/games/:id'),
     __param(0, routing_controllers_1.Param('id')),
-    __param(1, routing_controllers_1.BodyParam('color')),
-    __param(2, routing_controllers_1.Body()),
+    __param(1, routing_controllers_1.Body()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number, String, Object]),
+    __metadata("design:paramtypes", [Number, entity_1.default]),
     __metadata("design:returntype", Promise)
 ], GameController.prototype, "updateGame", null);
 __decorate([

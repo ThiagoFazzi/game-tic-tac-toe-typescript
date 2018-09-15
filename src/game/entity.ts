@@ -10,13 +10,13 @@ export default class Game extends BaseEntity {
 
   @IsString()
   @Column('text', { nullable: false })
-  name: string
+  name?: string
 
   @IsString()
   @IsIn(["red", "blue", "green", "yellow", "magenta"])
   @Column('text', { nullable: true })
-  color: string
+  color?: string
 
   @Column('json', { nullable: true })
-  board: object
+  board: Array<Array<string>>
 }
