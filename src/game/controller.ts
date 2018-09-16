@@ -1,6 +1,7 @@
 import { JsonController, Get, Put, Post, Param, HttpCode, Body, NotFoundError, BodyParam, BadRequestError } from 'routing-controllers';
 import Game from './entity';
-import { getColor, getBoard, movesValidate, colorValidate } from '../lib/functions';
+import { getColor, getBoard, movesValidate } from '../lib/functions';
+import { validate } from 'class-validator';
 
 @JsonController()
 export default class GameController {
@@ -26,10 +27,11 @@ export default class GameController {
       const oldGame = await Game.findOne(id)
       if(!oldGame) throw new NotFoundError('Cannot find this game')
       
-      if(colorValidate(curGame.color) === 0) throw new BadRequestError('This color does not be part of the pallete')
+      const errors = await validate(curGame)
+      if(errors.length > 0) throw new BadRequestError(`Validation failed!`);
       
       if(movesValidate(oldGame.board,curGame.board) > 1) throw new BadRequestError('You cannot make more than one move')
-      
+    
       return Game.merge(oldGame, curGame).save()
     }
 

@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const routing_controllers_1 = require("routing-controllers");
 const entity_1 = require("./entity");
 const functions_1 = require("../lib/functions");
+const class_validator_1 = require("class-validator");
 let GameController = class GameController {
     async allGames() {
         const games = await entity_1.default.find();
@@ -27,8 +28,9 @@ let GameController = class GameController {
         const oldGame = await entity_1.default.findOne(id);
         if (!oldGame)
             throw new routing_controllers_1.NotFoundError('Cannot find this game');
-        if (functions_1.colorValidate(curGame.color) === 0)
-            throw new routing_controllers_1.BadRequestError('This color does not be part of the pallete');
+        const errors = await class_validator_1.validate(curGame);
+        if (errors.length > 0)
+            throw new routing_controllers_1.BadRequestError(`Validation failed!`);
         if (functions_1.movesValidate(oldGame.board, curGame.board) > 1)
             throw new routing_controllers_1.BadRequestError('You cannot make more than one move');
         return entity_1.default.merge(oldGame, curGame).save();

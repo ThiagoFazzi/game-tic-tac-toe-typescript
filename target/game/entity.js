@@ -25,7 +25,7 @@ __decorate([
 ], Game.prototype, "name", void 0);
 __decorate([
     class_validator_1.IsString(),
-    class_validator_1.Contains('red'),
+    class_validator_1.IsIn(["red", "blue", "green", "yellow", "magenta"]),
     typeorm_1.Column('text', { nullable: true }),
     __metadata("design:type", String)
 ], Game.prototype, "color", void 0);

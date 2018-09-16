@@ -5,10 +5,6 @@ export const getColor = () => {
     return colors[colorIndex]
 }
 
-export const colorValidate = (color) =>
-  colors.filter((c) => c === color)
-  .length
-  
 export const getBoard = () =>
   [['o', 'o', 'o'],['o', 'o', 'o'],['o', 'o', 'o']]
 
