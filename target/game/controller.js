@@ -23,19 +23,15 @@ let GameController = class GameController {
     getGame(id) {
         return entity_1.default.findOne(id);
     }
-    async updateGame(id, game) {
+    async updateGame(id, curGame) {
         const oldGame = await entity_1.default.findOne(id);
         if (!oldGame)
             throw new routing_controllers_1.NotFoundError('Cannot find this game');
-        const newGame = new entity_1.default();
-        newGame.name = game.name;
-        newGame.color = game.color;
-        newGame.board = game.board;
-        if (functions_1.colorValidate(newGame.color) == 0)
+        if (functions_1.colorValidate(curGame.color) === 0)
             throw new routing_controllers_1.BadRequestError('This color does not be part of the pallete');
-        if (functions_1.movesValidate(oldGame.board, newGame.board) > 1)
+        if (functions_1.movesValidate(oldGame.board, curGame.board) > 1)
             throw new routing_controllers_1.BadRequestError('You cannot make more than one move');
-        return entity_1.default.merge(oldGame, newGame).save();
+        return entity_1.default.merge(oldGame, curGame).save();
     }
     createGame(gameName) {
         const game = new entity_1.default();
