@@ -21,7 +21,6 @@ export default class GameController {
     @Put('/games/:id')
     async updateGame(
       @Param('id') id: number,
-      //@BodyParam('color') newColor: string,
       @Body() game: Game
     ) {
       
